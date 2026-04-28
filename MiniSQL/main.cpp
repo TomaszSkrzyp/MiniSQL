@@ -9,7 +9,7 @@ int main() {
     std::string input;
 
     while (true) {
-        std::cout << "miniSQL > ";
+        std::cout << "miniSQL > " << std::flush;
         std::getline(std::cin, input); // read full line
         if (input.empty()) continue;
 

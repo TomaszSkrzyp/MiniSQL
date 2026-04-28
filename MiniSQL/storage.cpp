@@ -30,11 +30,33 @@ bool Storage::insert(const Record& record) {
         return false;
     }
 
-    std::ofstream file(filename, std::ios::binary | std::ios::app);
-    if (!file) return false;
+    std::fstream file(filename, std::ios::binary | std::ios::in | std::ios::out);
+    std::streampos pos;
+    bool foundSlot = false;
 
-    file.seekp(0, std::ios::end);
-    std::streampos pos = file.tellp();
+    if (file) {
+        Record temp;
+        while (file.read(reinterpret_cast<char*>(&temp), sizeof(Record))) {
+            if (temp.deleted) {
+                pos = file.tellg();
+                pos -= static_cast<std::streamoff>(sizeof(Record));
+                foundSlot = true;
+                break;
+            }
+        }
+    }
+
+    if (foundSlot) {
+        file.clear();
+        file.seekp(pos);
+    } else {
+        file.close();
+        file.open(filename, std::ios::binary | std::ios::out | std::ios::app);
+        file.seekp(0, std::ios::end);
+        pos = file.tellp();
+    }
+
+    if (!file) return false;
 
     file.write(reinterpret_cast<const char*>(&record), sizeof(Record));
     

@@ -28,24 +28,22 @@ Query parse(const std::string& input) {
         }
         else if (argUpper == "WHERE") {
             q.type = QueryType::SELECT_WHERE;
-
             std::string rest;
             std::getline(iss, rest);
 
-            // remove spaces
             rest.erase(remove_if(rest.begin(), rest.end(), ::isspace), rest.end());
-
             auto pos = rest.find('=');
-            if (pos == std::string::npos) {
-                q.type = QueryType::INVALID;
-                return q;
-            }
+            if (pos == std::string::npos) return Query{ QueryType::INVALID };
 
-            std::string field = rest.substr(0, pos);
+            std::string field = toUpper(rest.substr(0, pos));
             std::string value = rest.substr(pos + 1);
 
-            if (toUpper(field) == "NAME") {
+            if (field == "NAME") {
                 q.whereName = value;
+            }
+            else if (field == "ID") {
+                q.type = QueryType::SELECT_ONE; 
+                q.id = std::stoi(value);
             }
             else {
                 q.type = QueryType::INVALID;
