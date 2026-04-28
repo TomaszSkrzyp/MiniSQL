@@ -1,6 +1,7 @@
 #include <iostream>
 #include "storage.h"
 #include "parser.h"
+#include "utils.h"
 #include <cstring>
 
 int main() {
@@ -37,6 +38,19 @@ int main() {
             auto records = storage.getAll();
             for (const auto& r : records)
                 std::cout << r.id << " | " << r.name << "\n";
+            break;
+        }
+        case QueryType::SELECT_WHERE: {
+            auto records = storage.getAll();
+            bool found = false;
+            for (auto& r : records) {
+                std::string recName(r.name);
+                if (recName == q.whereName) {
+                    std::cout << r.id << " | " << r.name << "\n";
+                    found = true;
+                }
+            }
+            if (!found) std::cout << "No records found.\n";
             break;
         }
         case QueryType::DELETE: {

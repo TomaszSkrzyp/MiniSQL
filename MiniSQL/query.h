@@ -1,3 +1,4 @@
+// query.h
 #pragma once
 #include <string>
 
@@ -6,11 +7,13 @@ enum class QueryType {
     SELECT_ONE,
     SELECT_ALL,
     DELETE,
+    SELECT_WHERE,
     INVALID
 };
 
 struct Query {
     QueryType type;
-    int id;
+    int id = 0;
     std::string name;
+    std::string whereName; 
 };
