@@ -56,6 +56,10 @@ Query parse(const std::string& input) {
         q.type = QueryType::DELETE;
         iss >> q.id;
     }
+    else if (commandUpper == "UPDATE") {
+        q.type = QueryType::UPDATE;
+        iss >> q.id >> q.name;
+    }
 
     return q;
 }

@@ -9,10 +9,11 @@ class Storage {
 public:
     Storage(const std::string& filename);
 
-    void insert(const Record& record);
+    bool insert(const Record& record);
     std::vector<Record> getAll();
     bool findById(int id, Record& result);
     bool removeById(int id);
+    bool updateById(int id, const std::string& newName);
 
 private:
     std::string filename;

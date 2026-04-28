@@ -22,8 +22,10 @@ int main() {
             r.deleted = false;
             std::strncpy(r.name, q.name.c_str(), sizeof(r.name));
             r.name[sizeof(r.name) - 1] = '\0';
-            storage.insert(r);
-            std::cout << "Inserted.\n";
+            if (storage.insert(r))
+                std::cout << "Inserted.\n";
+            else
+                std::cout << "Error: Duplicate ID.\n";
             break;
         }
         case QueryType::SELECT_ONE: {
@@ -56,6 +58,13 @@ int main() {
         case QueryType::DELETE: {
             if (storage.removeById(q.id))
                 std::cout << "Deleted.\n";
+            else
+                std::cout << "Record not found.\n";
+            break;
+        }
+        case QueryType::UPDATE: {
+            if (storage.updateById(q.id, q.name))
+                std::cout << "Updated.\n";
             else
                 std::cout << "Record not found.\n";
             break;

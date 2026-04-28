@@ -1,4 +1,3 @@
-// query.h
 #pragma once
 #include <string>
 
@@ -7,6 +6,7 @@ enum class QueryType {
     SELECT_ONE,
     SELECT_ALL,
     DELETE,
+    UPDATE,
     SELECT_WHERE,
     INVALID
 };

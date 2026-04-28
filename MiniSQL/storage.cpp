@@ -1,5 +1,6 @@
 #include "storage.h"
 #include <fstream>
+#include <cstring>
 
 Storage::Storage(const std::string& filename) : filename(filename) {
     buildIndex();
@@ -24,15 +25,24 @@ void Storage::buildIndex() {
     }
 }
 
-void Storage::insert(const Record& record) {
+bool Storage::insert(const Record& record) {
+    if (index.find(record.id) != index.end()) {
+        return false;
+    }
+
     std::ofstream file(filename, std::ios::binary | std::ios::app);
+    if (!file) return false;
+
+    file.seekp(0, std::ios::end);
     std::streampos pos = file.tellp();
 
     file.write(reinterpret_cast<const char*>(&record), sizeof(Record));
-
-    if (!record.deleted) {
+    
+    if (file.good() && !record.deleted) {
         index[record.id] = pos;
+        return true;
     }
+    return false;
 }
 
 std::vector<Record> Storage::getAll() {
@@ -76,5 +86,28 @@ bool Storage::removeById(int id) {
     file.write(reinterpret_cast<const char*>(&temp), sizeof(Record));
 
     index.erase(id);
+    return true;
+}
+
+bool Storage::updateById(int id, const std::string& newName) {
+    auto it = index.find(id);
+    if (it == index.end()) return false;
+
+    std::fstream file(filename, std::ios::binary | std::ios::in | std::ios::out);
+    if (!file) return false;
+
+    file.seekg(it->second);
+
+    Record temp;
+    file.read(reinterpret_cast<char*>(&temp), sizeof(Record));
+
+    if (temp.deleted) return false;
+
+    std::strncpy(temp.name, newName.c_str(), sizeof(temp.name));
+    temp.name[sizeof(temp.name) - 1] = '\0';
+
+    file.seekp(it->second);
+    file.write(reinterpret_cast<const char*>(&temp), sizeof(Record));
+
     return true;
 }
