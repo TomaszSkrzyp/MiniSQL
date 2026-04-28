@@ -124,9 +124,12 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="parser.cpp" />
     <ClCompile Include="storage.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="parser.h" />
+    <ClInclude Include="query.h" />
     <ClInclude Include="record.h" />
     <ClInclude Include="storage.h" />
   </ItemGroup>

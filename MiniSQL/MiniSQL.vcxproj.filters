@@ -21,12 +21,21 @@
     <ClCompile Include="storage.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="parser.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="storage.h">
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="record.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="parser.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="query.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>

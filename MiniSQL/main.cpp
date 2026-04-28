@@ -1,71 +1,53 @@
 #include <iostream>
-#include <cstring>
 #include "storage.h"
+#include "parser.h"
+#include <cstring>
 
 int main() {
     Storage storage("data.bin");
+    std::string input;
 
-    std::string command;
-    std::cout << "Commands: insert | list | select | delete\n";
-    std::cout << "> ";
-    std::cin >> command;
+    while (true) {
+        std::cout << "miniSQL > ";
+        std::getline(std::cin, input); // read full line
+        if (input.empty()) continue;
 
-    if (command == "insert") {
-        Record r;
+        Query q = parse(input); // parse entire line
 
-        std::cout << "ID: ";
-        std::cin >> r.id;
-
-        std::cout << "Name: ";
-        std::cin >> std::ws;
-
-        std::string name;
-        std::getline(std::cin, name);
-
-        std::strncpy(r.name, name.c_str(), sizeof(r.name));
-        r.name[sizeof(r.name) - 1] = '\0'; // prevent overflow
-
-        storage.insert(r);
-        std::cout << "Saved.\n";
-    }
-
-    else if (command == "list") {
-        auto records = storage.getAll();
-
-        for (const auto& r : records) {
-            std::cout << r.id << " | " << r.name << "\n";
+        switch (q.type) {
+        case QueryType::INSERT: {
+            Record r;
+            r.id = q.id;
+            r.deleted = false;
+            std::strncpy(r.name, q.name.c_str(), sizeof(r.name));
+            r.name[sizeof(r.name) - 1] = '\0';
+            storage.insert(r);
+            std::cout << "Inserted.\n";
+            break;
+        }
+        case QueryType::SELECT_ONE: {
+            Record r;
+            if (storage.findById(q.id, r))
+                std::cout << r.id << " | " << r.name << "\n";
+            else
+                std::cout << "Record not found.\n";
+            break;
+        }
+        case QueryType::SELECT_ALL: {
+            auto records = storage.getAll();
+            for (const auto& r : records)
+                std::cout << r.id << " | " << r.name << "\n";
+            break;
+        }
+        case QueryType::DELETE: {
+            if (storage.removeById(q.id))
+                std::cout << "Deleted.\n";
+            else
+                std::cout << "Record not found.\n";
+            break;
+        }
+        default:
+            std::cout << "Invalid query.\n";
         }
     }
-
-    else if (command == "select") {
-        int id;
-        std::cout << "Enter ID: ";
-        std::cin >> id;
-
-        Record result;
-        if (storage.findById(id, result)) {
-            std::cout << result.id << " | " << result.name << "\n";
-        }
-        else {
-            std::cout << "Record not found.\n";
-        }
-    }
-    else if (command == "delete") {
-        int id;
-        std::cout << "Enter ID: ";
-        std::cin >> id;
-
-        if (storage.removeById(id)) {
-            std::cout << "Deleted.\n";
-        }
-        else {
-            std::cout << "Record not found.\n";
-        }
-    }
-
-    else {
-        std::cout << "Unknown command.\n";
-    }
-
-    return 0;
 }
