@@ -362,6 +362,26 @@ MigrationBackup/
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
 
+# Database files (Recursive)
 data.bin
+
+# Visual Studio files
 *.vcxproj
 *.vcxproj.filters
+*.vcxproj.user
+*.sln
+.vs/
+Debug/
+Release/
+x64/
+x86/
+
+# Compiled C++ binaries
+*.exe
+*.obj
+*.pdb
+*.log
+
+# Python
+__pycache__/
+.pytest_cache/
