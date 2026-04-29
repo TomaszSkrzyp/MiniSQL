@@ -124,9 +124,8 @@ bool Storage::updateById(int id, const std::string& newName) {
     file.read(reinterpret_cast<char*>(&temp), sizeof(Record));
 
     if (temp.deleted) return false;
-
-    std::strncpy(temp.name, newName.c_str(), sizeof(temp.name));
-    temp.name[sizeof(temp.name) - 1] = '\0';
+    
+    temp.set_name(newName);
 
     file.seekp(it->second);
     file.write(reinterpret_cast<const char*>(&temp), sizeof(Record));

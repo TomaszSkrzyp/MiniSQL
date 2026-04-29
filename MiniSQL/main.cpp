@@ -20,8 +20,7 @@ int main() {
             Record r;
             r.id = q.id;
             r.deleted = false;
-            std::strncpy(r.name, q.name.c_str(), sizeof(r.name));
-            r.name[sizeof(r.name) - 1] = '\0';
+            r.set_name(q.name.c_str());
             if (storage.insert(r))
                 std::cout << "Inserted.\n";
             else
