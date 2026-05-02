@@ -7,7 +7,9 @@ enum class TokenType {
     NUMBER,
     STRING,
     OPERATOR,
-    END
+    SYMBOL,
+    END,
+    INVALID,
 };
 
 struct Token {
