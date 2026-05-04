@@ -3,7 +3,8 @@ import os
 import time
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-EXE_PATH = os.path.join(BASE_DIR, "MiniSQL", "mini_sql.exe")
+# Absolute or relative path to the newly built executable
+EXE_PATH = r"C:\Things\MiniSQL\out\build\Visual Studio Community 2022 Release - amd64\Debug\minisql_exe.exe"
 DATA_FILE = os.path.join(BASE_DIR, "MiniSQL", "data.bin")
 
 def send_cmd(process, cmd):

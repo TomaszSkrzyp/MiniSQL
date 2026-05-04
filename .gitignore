@@ -385,3 +385,17 @@ x86/
 # Python
 __pycache__/
 .pytest_cache/
+
+#cmake files
+CMakeCache.txt
+CMakeFiles/
+CMakeScripts/
+cmake_install.cmake
+install_manifest.txt
+Makefile
+CMakePresets.json
+
+build/
+out/
+bin/
+obj/
