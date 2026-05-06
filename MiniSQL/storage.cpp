@@ -57,30 +57,29 @@ bool Storage::insert(const Record& record) {
 
     std::fstream file(filename, std::ios::binary | std::ios::in | std::ios::out);
     std::streampos pos;
-    bool foundSlot = false;
 
-    if (file) {
+    if (file.is_open()) {
         Record temp;
         while (true) {
             std::streampos currentPos = file.tellg();
-            if (!readRecord(file, temp)) break;
-
+            if (!readRecord(file, temp)) {
+                file.clear();                 
+                file.seekp(0, std::ios::end); 
+                pos = file.tellp();        
+                break;
+            }
+            //found a previously deleted space to overwrite
             if (temp.deleted) {
                 pos = currentPos;
-                foundSlot = true;
+                file.clear();
+                file.seekp(pos);
                 break;
             }
         }
-    }
-
-    if (foundSlot) {
-        file.clear();
-        file.seekp(pos);
     } else {
-        file.close();
         file.open(filename, std::ios::binary | std::ios::out | std::ios::app);
         if (!file) return false;
-        pos = file.tellp();
+        pos = 0; 
     }
 
     writeRecord(file, record);
@@ -89,7 +88,6 @@ bool Storage::insert(const Record& record) {
         index[record.id] = pos;
         return true;
     }
-
     return false;
 }
 
